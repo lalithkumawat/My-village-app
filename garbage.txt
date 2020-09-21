@@ -1,0 +1,137 @@
+import React,{useState} from 'react';
+import { Image, Button, FlatList , StyleSheet, Text, View, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
+import GridView, { FlatGrid } from "react-native-super-grid";
+import CatDetails from './components/CatDetails';
+
+
+
+import React, { Component } from 'react'
+
+class App extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+         
+    }
+  }
+
+  render() {
+    return (
+      <div>
+        
+      </div>
+    )
+  }
+}
+
+export default App
+
+export default function App() {
+
+  const [people,setPeople] = useState([
+    {name: "Lalit",id: 1},
+    {name: "Ankush",id :2},
+    {name: "Varun",id : 3},
+    {name: "Arjun",id : 4},
+    {name: "Shrawan",id : 5 },
+    {name: "Urmila",id : 1},
+  ]);
+  const [items, setItems] = React.useState([
+    { name: 'Grocery', code: '#1abc9c' },
+    { name: 'Dairy', code: '#2ecc71' },
+    { name: 'Mall', code: '#3498db' },
+    { name: 'Novelty', code: '#9b59b6' },
+    { name: 'Electronics', code: '#34495e' },
+    { name: 'E-mitra', code: '#16a085' },
+    
+  ]);
+  const onPressHandler= (category)=>{
+    console.log(category);
+     
+    
+  }
+  return (
+    <ScrollView >
+    <SafeAreaView>
+      <Text style = { styles.header }>Header</Text>
+    </SafeAreaView>
+    
+    <FlatGrid
+     itemDimension= {130}
+     style = {styles.gridView}
+     data={items}
+     renderItem={({ item }) => (
+      <View style={styles.itemContainer}>
+        <Button  style={{textAlign: 'center'}}
+        title = {item.name}
+        color=  {item.code}
+        onPress = {()=>{onPressHandler(item.name);}}
+        />
+        
+      </View>
+     )}
+     />
+     
+  {/* //  <SafeAreaView>
+  //    <Text>Choose category:</Text>
+  //    <Button title = "Grocery" onPress={()=>{onPressHandler();}}/>
+     
+  //  </SafeAreaView> */}
+      
+   
+     </ScrollView>
+    // </ScrollView>
+  );
+}
+function CatDetails( category){
+   return
+}
+const styles = StyleSheet.create({
+  gridView: {
+    marginTop: 10,
+    flex: 1,
+  },
+  header:{
+     backgroundColor:"#2ecc71" ,
+     textAlign: 'center', 
+     borderRadius: 20
+  },
+  itemContainer:{
+    
+    borderRadius: 20,
+  },
+  container: {
+    flex: 1,
+    width:500,
+    height:500,
+    // borderRadius: 20,
+    // borderWidth: 2,
+    
+    // backgroundColor: '#fff',
+    alignItems: 'center',
+    // justifyContent: 'center',
+  },
+  welcome: {
+    margin: 24,
+    fontSize: 18,
+    fontWeight: 'bold',
+    backgroundColor:'pink',
+    // textAlign: 'center'
+  },
+  image:{
+    width:100,
+    height:100
+  },
+  box: {
+    width: 100,
+    height: 100,
+    borderRadius: 20,
+    borderWidth: 2,
+    backgroundColor: 'skyblue'
+  },
+});
+
+
+
+

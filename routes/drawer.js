@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import HomeStack from './homeStack';
 import AboutStack from './aboutStack';
 import { createAppContainer } from 'react-navigation';
-import About from '../components/About';
+import About from '../src/components/About';
 import React from "react"
 const Drawer = createDrawerNavigator();
  

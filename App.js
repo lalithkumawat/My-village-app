@@ -1,22 +1,21 @@
 import 'react-native-gesture-handler';
 import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer,useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Icon } from 'react-native-elements'
 
+import Home from './src/components/Home';
+import About from './src/components/About';
+import AddShop from "./src/components/AddShop";
+import CatDetails from './src/components/CatDetails';
+import ShopDetails from './src/components/ShopDetails';
 
-import Header from './components/Header';
-import Navigator from "./routes/drawer"
-import Home from './components/Home';
-import About from './components/About';
-import AddShop from "./components/AddShop";
-import CatDetails from './components/CatDetails';
-import ShopDetails from './components/ShopDetails';
-import drawer from './routes/drawer';
 import { MaterialIcons } from "@expo/vector-icons"
 import { Button,Image,View,Text } from 'react-native';
 
+import { firebase } from "./src/firebase/config";
+// import Header from './src/components/Header';
 const Stack = createStackNavigator();
 const AboutStack = createStackNavigator();
 const AddAShopStack = createStackNavigator();
@@ -75,9 +74,12 @@ function AboutStackScreen({navgation}) {
     </AboutStack.Navigator>
   )
 }
-function HomeStackScreen({navgation}) {
+
+function HomeStackScreen({navigation}) {
+  // const {navigation} = props
   return (
     <HomeStack.Navigator 
+    
     screenOptions = {
       {headerStyle: {
         backgroundColor: '#f4511e',
@@ -86,13 +88,26 @@ function HomeStackScreen({navgation}) {
       headerTitleStyle: {
         fontWeight: 'bold',
       },
-      headerTitleAlign:"center"}
-    }
+      // headerTitle:props => <MenuIcon {...props} />,
+      headerTitleAlign:"center",
+    //   headerLeft: () => <Icon
+    //   name="menu"
+    //   size = {30}
+    //   onPress={()=>navigation.openDrawer()}
+    // />  ,
+      
+    }}
+    // options={{ headerTitle: props => <MenuIcon {...props} /> }}
+
+    headerMode="screen"
     >
       <HomeStack.Screen 
           name = "Home" 
           component = {Home}
-          options={{ }}/>
+          options= {{
+            // headerLeft:()=>MenuIcon(navigation)
+          }}
+          />
 
         <HomeStack.Screen
           name= "CatDetails" 
@@ -105,10 +120,7 @@ function HomeStackScreen({navgation}) {
           options={({ route }) => ({ title: route.params.shop.shopName })}
           
           />  
-          {/* <HomeStack.Screen name= "AddShop"
-         component ={AddShop}
-         options={{ title: "Add a shop",}}
-         /> */}
+          
     </HomeStack.Navigator>
   )
 }
@@ -139,8 +151,51 @@ function StackNavigation({route,navgation}){
    
 )
 }
+const getdb = () =>{
+  console.log(firebase.firestore.name);
+   
+}
+export default function App({navigation}) {
 
-export default function App() {
+  const dbh = firebase.firestore();
+  const ref = firebase.firestore().collection("shops");
+
+
+    console.log("data",dbh.collection("shops"));
+    const doc =  dbh.doc("/shops/id/");
+    if (!doc.exists) {
+    console.log('No such document!');
+    } else {
+    console.log('Document data:', doc.data());
+    }
+  async function addData() {
+      await ref.add({
+        id: 3,
+        shopName: "Shri Ambeshwar Kirana store",
+        shopOwner: {
+            name: "Pukhraj",
+            contact: "1234567890",
+        },
+        shopAddress: "Ajad Chowk, Posaliya",
+        pincode: 307027,
+        shopCategory: ["novelty", "Grocery", "Hair cutting"],
+        images: ["../assets/im.jpg"]
+    }).then(d=>{console.log("addd",d); })
+      .catch(err=>{console.log("err",err);
+      })
+    
+  }
+  async function readData() {
+    await ref.onSnapshot(q=>{
+      q.forEach(doc=>{
+        console.log(doc.data());
+        
+      
+    })
+    })
+  }
+  // addData()
+  // readData()
   return (
 
     <NavigationContainer
@@ -159,66 +214,6 @@ export default function App() {
         
         />
       </Drawer.Navigator>
-      {/* <Stack.Navigator
-        screenOptions={{
-            
-            // headerLeft:()=>{
-            // <Button name="menu" size={20} color="#fff"
-            //  style={{
-            //   position:"absolute",
-            //   color:"white",
-            //   left:16}} onPress ={()=>{navgation.openDrawer()}}  />
-
-            // },
-          
-        }}
-        >
-
-        <Stack.Screen name="Home" component={StackNavigation} />
-        <Stack.Screen
-          name= "CatDetails" 
-          component ={CatDetails}
-          options={({ route }) => ({ title: route.params.Category })}
-          />
-        <Stack.Screen
-          name = "ShopDetails" 
-          component = {ShopDetails}
-          options={({ route }) => ({ title: route.params.shop.shopName })}
-          
-          />
-        
-
-        <Stack.Screen name= "AddShop"
-         component ={AddShop}
-         options={{ title: "Add a shop",
-         headerStyle: {
-          backgroundColor: '#f4511e',
-        },
-        headerTintColor: '#fff',
-        headerTitleStyle: {
-          fontWeight: 'bold',
-        },
-        headerTitleAlign:"center"
-        }}
-         />
-        <Stack.Screen 
-          name = "About" 
-          component = {About}
-          options={{ 
-            title: "About app",
-            headerStyle: {
-              backgroundColor: '#f4511e',
-            },
-            headerTintColor: '#fff',
-            headerTitleStyle: {
-              fontWeight: 'bold',
-            },
-            headerTitleAlign:"center",
-            }}/>
-      </Stack.Navigator> */}
-      
-    
-      
    </NavigationContainer>
 
   );
